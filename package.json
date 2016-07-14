@@ -1,0 +1,41 @@
+{
+  "name": "montecalro2048",
+  "version": "0.0.1",
+  "description": "2048 solver with montecalro",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build:watch": "webpack -w",
+    "test": "mocha --compilers js:babel-register --recursive",
+    "test:watch": "npm test -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazufusa/MonteCalro2048.git"
+  },
+  "keywords": [
+    "MonteCalro",
+    "2048"
+  ],
+  "author": "kazufusa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kazufusa/MonteCalro2048/issues"
+  },
+  "homepage": "https://github.com/kazufusa/MonteCalro2048#readme",
+  "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "eslint": "^3.0.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.10.2",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^5.2.2",
+    "mocha": "^2.5.3",
+    "webpack": "^1.13.1"
+  }
+}

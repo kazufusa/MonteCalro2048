@@ -1,0 +1,5 @@
+env:
+  mocha: true
+extends: airbnb
+rules:
+  semi: 0
