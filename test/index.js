@@ -51,24 +51,24 @@ describe('board', () => {
   describe('.isCleared', () => {
     it('should be false with a setup not including target value', () => {
       const board = setup({ target: 2048 })
-      assert.ok(!board.isCleared)
+      assert.deepStrictEqual(board.isCleared, false)
     })
 
     it('should be true with a setup including target value', () => {
       const board = setup({ target: 2 })
-      assert.ok(board.isCleared)
+      assert.deepStrictEqual(board.isCleared, true)
     })
   })
 
   describe('.isOvered', () => {
     it('should be false with a setup including a cell of zero', () => {
       const board = setup()
-      assert.ok(!board.isOvered)
+      assert.deepStrictEqual(board.isOvered, false)
     })
 
     it('should be true with a setup not including a cell of zero', () => {
       const board = unmovableSetup()
-      assert.ok(board.isOvered)
+      assert.deepStrictEqual(board.isOvered, true)
     })
   })
 
@@ -96,63 +96,63 @@ describe('board', () => {
   describe('#move', () => {
     it('should be enable to take a move to left', () => {
       const board = setup()
-      board.move(LEFT)
+      assert.deepStrictEqual(board.move(LEFT), true)
       assert.deepStrictEqual(board.position, left)
     })
 
     it('should be enable to take a move to right', () => {
       const board = setup()
-      board.move(RIGHT)
+      assert.deepStrictEqual(board.move(RIGHT), true)
       assert.deepStrictEqual(board.position, right)
     })
 
     it('should be enable to take a move to up', () => {
       const board = setup()
-      board.move(UP)
+      assert.deepStrictEqual(board.move(UP), true)
       assert.deepStrictEqual(board.position, up)
     })
 
     it('should be enable to take a move to down', () => {
       const board = setup()
-      board.move(DOWN)
+      assert.deepStrictEqual(board.move(DOWN), true)
       assert.deepStrictEqual(board.position, down)
     })
 
     it('should be disable to take a move to left', () => {
       const board = unmovableSetup()
-      assert.ok(!board.move(DOWN))
-      assert.ok(board.isOvered)
+      assert.deepStrictEqual(board.move(DOWN), false)
+      assert.deepStrictEqual(board.isOvered, true)
     })
 
     it('should be disable to take a move to right', () => {
       const board = unmovableSetup()
-      assert.ok(!board.move(RIGHT))
-      assert.ok(board.isOvered)
+      assert.deepStrictEqual(board.move(RIGHT), false)
+      assert.deepStrictEqual(board.isOvered, true)
     })
 
     it('should be disable to take a move to up', () => {
       const board = unmovableSetup()
-      assert.ok(!board.move(UP))
-      assert.ok(board.isOvered)
+      assert.deepStrictEqual(board.move(UP), false)
+      assert.deepStrictEqual(board.isOvered, true)
     })
 
     it('should be disable to take a move to down', () => {
       const board = unmovableSetup()
-      assert.ok(!board.move(DOWN))
-      assert.ok(board.isOvered)
+      assert.deepStrictEqual(board.move(DOWN), false)
+      assert.deepStrictEqual(board.isOvered, true)
     })
   })
 
   describe('#evaluate', () => {
     it('returns a evaluation of the input move', () => {
-      const board = new Board([[0, 0, 0, 0], [0, 2, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
-      assert.ok(parseInt(board.evaluate(), 10))
+      const board = new Board([[0, 0, 0, 2], [0, 0, 2, 4], [1, 4, 8, 16], [2, 3, 8, 16]])
+      assert.ok(parseInt(board.evaluate(0), 10))
     })
   })
 
   describe('#predict', () => {
     it('returns a move and evaluations', () => {
-      const board = new Board([[0, 0, 0, 0], [0, 2, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
+      const board = new Board([[0, 0, 0, 2], [0, 0, 2, 4], [1, 4, 8, 16], [2, 3, 8, 16]])
       const ret = board.predict()
       assert.ok(DIRECTIONS.includes(ret.direction))
       assert.deepStrictEqual(ret.evaluations.length, 4)
