@@ -4,12 +4,25 @@ const RIGHT = 2
 const DOWN = 3
 const DIRECTIONS = [LEFT, UP, RIGHT, DOWN]
 
-// const transposition = (array2d) => array2d.map((v, i) => v.map((_, j) => array2d[j][i]))
 const transposition = (array2d, nrow, ncol) => {
-  const ret = Array.from(Array(ncol), () => new Array(nrow))
+  const ret = []
+  for (let i = 0; i < ncol; ++i) {
+    ret[i] = []
+    for (let j = 0; j < nrow; ++j) {
+      ret[i][j] = array2d[j][i]
+    }
+  }
+  return ret
+}
+
+const copy = (array2d) => {
+  const nrow = array2d.length
+  const ncol = array2d[0].length
+  const ret = []
   for (let i = 0; i < nrow; ++i) {
+    ret[i] = []
     for (let j = 0; j < ncol; ++j) {
-      ret[j][i] = array2d[i][j]
+      ret[i][j] = array2d[i][j]
     }
   }
   return ret
@@ -17,7 +30,7 @@ const transposition = (array2d, nrow, ncol) => {
 
 class Board {
   constructor(setup, options = {}) {
-    this.position = JSON.parse(JSON.stringify(setup))
+    this.position = copy(setup)
     this.nrow = setup.length
     this.ncol = setup[0].length
 
@@ -125,20 +138,6 @@ class Board {
 
   merge() {
     let ret = false;
-    for (let i = 0; i < this.nrow; ++i) {
-      for (let j = 0; j < this.ncol - 1; ++j) {
-        if (this.position[i][j] === 0) {
-          for (let k = j + 1; k < this.ncol; k++) {
-            if (this.position[i][k] !== 0) {
-              this.position[i][j] = this.position[i][k];
-              this.position[i][k] = 0;
-              ret = true;
-              break;
-            }
-          }
-        }
-      }
-    }
 
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol - 1; ++j) {
@@ -171,18 +170,18 @@ class Board {
   evaluate(direction) {
     const directionBoard = this.copy()
     if (!directionBoard.move(direction)) return -1
-    if (directionBoard.isOvered) return 0
-    if (directionBoard.isCleared) return directionBoard.nZeroCells
+    if (directionBoard.isCleared) return directionBoard.nZeroCells * this.sampling
 
     let count = 0
     let samplingBoard
-    directionBoard.add()
 
     for (let j = 0; j < this.sampling; ++j) {
       samplingBoard = directionBoard.copy()
       for (let k = 0; k < this.depth; ++k) {
+        samplingBoard.add()
+
         if (samplingBoard.move(DIRECTIONS[Math.floor(Math.random() * 4)])) {
-          samplingBoard.add()
+          if (samplingBoard.isCleared) break
         } else {
           if (samplingBoard.isOvered) break
         }
@@ -200,6 +199,11 @@ class Board {
       evaluations,
     }
   }
+
+  print() {
+    return this.position.map((v) => v.map((vv) => `    ${vv}`.slice(-4)).join(' ')).join('\n')
+  }
+
 }
 
 export { Board, LEFT, UP, RIGHT, DOWN, DIRECTIONS }
