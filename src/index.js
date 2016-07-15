@@ -4,34 +4,12 @@ const RIGHT = 2
 const DOWN = 3
 const DIRECTIONS = [LEFT, UP, RIGHT, DOWN]
 
-// const flatten = (array2d) => Array.prototype.concat.apply([], array2d)
-const flatten = (array2d, nrow, ncol) => {
-  const ret = new Array(nrow * ncol)
-  for (let i = 0; i < nrow; ++i | 0) {
-    for (let j = 0; j < ncol; ++j | 0) {
-      ret[i * ncol + j] = array2d[i][j]
-    }
-  }
-  return ret
-}
-
 // const transposition = (array2d) => array2d.map((v, i) => v.map((_, j) => array2d[j][i]))
 const transposition = (array2d, nrow, ncol) => {
   const ret = Array.from(Array(ncol), () => new Array(nrow))
-  for (let i = 0; i < nrow; ++i | 0) {
-    for (let j = 0; j < ncol; ++j | 0) {
+  for (let i = 0; i < nrow; ++i) {
+    for (let j = 0; j < ncol; ++j) {
       ret[j][i] = array2d[i][j]
-    }
-  }
-  return ret
-}
-
-// const innerReverse = (array2d) => array2d.map((v) => v.reverse())
-const innerReverse = (array2d, nrow, ncol) => {
-  const ret = Array.from(Array(ncol), () => new Array(nrow))
-  for (let i = 0; i < nrow; ++i | 0) {
-    for (let j = 0; j < ncol; ++j | 0) {
-      ret[i][j] = array2d[i][ncol - j - 1]
     }
   }
   return ret
@@ -51,13 +29,15 @@ class Board {
   }
 
   updateState() {
-    const position = flatten(this.position, this.nrow, this.ncol)
-    this.isCleared = position.includes(this.target)
-    this.isOvered = !position.includes(0)
     this.nZeroCells = 0
-    for (let i = 0; i < position.length; ++i | 0) {
-      if (position[i] === 0) ++this.nZeroCells
+    this.isCleared = false
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol; ++j) {
+        if (this.position[i][j] === this.target) this.isCleared = true
+        if (this.position[i][j] === 0) ++this.nZeroCells
+      }
     }
+    this.isOvered = this.nZeroCells === 0
   }
 
   copy() {
@@ -68,49 +48,41 @@ class Board {
   }
 
   add() {
-    if (this.isOvered) return
+    this.updateState()
+    if (this.nZeroCells === 0) return
+    let n = Math.floor(Math.random() * (this.nZeroCells))
 
-    const valIndexes =
-      flatten(
-        this.position.map(
-          (v, i) => v.map((_, j) => (this.position[i][j] > 0 ? undefined : [i, j]))
-        ),
-        this.nrow,
-        this.ncol
-      ).filter((v) => v !== undefined)
-
-    const n = Math.floor(Math.random() * (this.nZeroCells))
-
-    this.position[valIndexes[n][0]][valIndexes[n][1]] = Math.random() < 0.9 ? 2 : 4
-    --this.nZeroCells
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol; ++j) {
+        if (this.position[i][j] === 0 && n === 0) {
+          this.position[i][j] = Math.random() < 0.9 ? 2 : 4;
+          return;
+        }
+        if (this.position[i][j] === 0) --n;
+      }
+    }
   }
 
   move(direction) {
-    const previousPosition = this.position
     this.preprocess(direction)
-    this.position = this.position.map((v) => this.merge(v))
+    const ret = this.merge()
     this.postprocess(direction)
     this.updateState()
 
-    for (let i = 0; i < this.nrow; ++i | 0) {
-      for (let j = 0; j < this.ncol; ++j | 0) {
-        if (this.position[i][j] !== previousPosition[i][j]) return true
-      }
-    }
-    return false
+    return ret
   }
 
   preprocess(direction) {
     switch (direction) {
       case RIGHT:
-        this.position = innerReverse(this.position, this.nrow, this.ncol)
+        this.reverseRow()
         break
       case UP:
-        this.position = transposition(this.position, this.nrow, this.ncol)
+        this.transposition()
         break
       case DOWN:
-        this.position = innerReverse(
-          transposition(this.position, this.nrow, this.ncol), this.nrow, this.ncol)
+        this.transposition()
+        this.reverseRow()
         break
       default:
         break
@@ -120,32 +92,80 @@ class Board {
   postprocess(direction) {
     switch (direction) {
       case RIGHT:
-        this.position = innerReverse(this.position, this.nrow, this.ncol)
+        this.reverseRow()
         break
       case UP:
-        this.position = transposition(this.position, this.nrow, this.ncol)
+        this.transposition()
         break
       case DOWN:
-        this.position = transposition(
-          innerReverse(this.position, this.nrow, this.ncol), this.nrow, this.ncol)
+        this.reverseRow()
+        this.transposition()
         break
       default:
         break
     }
   }
 
-  merge(_array) {
-    const size = _array.length
-    const array = _array.filter((v) => v > 0)
-    for (let i = 0; i < array.length - 1; ++i | 0) {
-      if (array[i] === array[i + 1]) {
-        array[i] = array[i] * 2
-        array[i + 1] = 0
+  reverseRow() {
+    let swaptmp
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol / 2; ++j) {
+        if (this.position[i][j] !== this.position[i][this.ncol - 1 - j]) {
+          swaptmp = this.position[i][j]
+          this.position[i][j] = this.position[i][this.ncol - 1 - j]
+          this.position[i][this.ncol - 1 - j] = swaptmp
+        }
       }
     }
-    return array.filter((v) => v > 0)
-      .concat(Array.from(Array(size), () => 0))
-      .slice(0, size)
+  }
+
+  transposition() {
+    this.position = transposition(this.position, this.nrow, this.ncol)
+  }
+
+  merge() {
+    let ret = false;
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol - 1; ++j) {
+        if (this.position[i][j] === 0) {
+          for (let k = j + 1; k < this.ncol; k++) {
+            if (this.position[i][k] !== 0) {
+              this.position[i][j] = this.position[i][k];
+              this.position[i][k] = 0;
+              ret = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol - 1; ++j) {
+        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][j + 1]) {
+          this.position[i][j] = this.position[i][j] * 2;
+          this.position[i][j + 1] = 0;
+          ret = true;
+        }
+      }
+    }
+
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol - 1; ++j) {
+        if (this.position[i][j] === 0) {
+          for (let k = j + 1; k < this.ncol; ++k) {
+            if (this.position[i][k] !== 0) {
+              this.position[i][j] = this.position[i][k];
+              this.position[i][k] = 0;
+              ret = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return ret;
   }
 
   evaluate(direction) {
@@ -158,9 +178,9 @@ class Board {
     let samplingBoard
     directionBoard.add()
 
-    for (let j = 0; j < this.sampling; ++j | 0) {
+    for (let j = 0; j < this.sampling; ++j) {
       samplingBoard = directionBoard.copy()
-      for (let k = 0; k < this.depth; ++k | 0) {
+      for (let k = 0; k < this.depth; ++k) {
         if (samplingBoard.move(DIRECTIONS[Math.floor(Math.random() * 4)])) {
           samplingBoard.add()
         } else {
