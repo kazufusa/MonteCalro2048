@@ -76,6 +76,48 @@ class Board {
     }
   }
 
+  isLeftMovable() {
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol - 1; ++j) {
+        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][j + 1]) {
+          return true
+        }
+      }
+    }
+
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol - 1; ++j) {
+        if (this.position[i][j] === 0) {
+          for (let k = j + 1; k < this.ncol; k++) {
+            if (this.position[i][k] !== 0) return true
+          }
+        }
+      }
+    }
+
+    return false
+  }
+
+  isMovable(direction) {
+    const testboard = this.copy()
+    testboard.preprocess(direction)
+    return testboard.isLeftMovable()
+  }
+
+  randomMove() {
+    const directions = [-1, -1, -1, -1]
+    let ndirections = 0
+    for (let i = 0; i < 4; ++i) {
+      if (this.isMovable(i)) {
+        directions[ndirections] = i
+        ++ndirections
+      }
+    }
+    if (ndirections === 0) return false
+    this.move(directions[Math.floor(Math.random() * ndirections)])
+    return true
+  }
+
   move(direction) {
     this.preprocess(direction)
     const ret = this.merge()
@@ -152,7 +194,7 @@ class Board {
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol - 1; ++j) {
         if (this.position[i][j] === 0) {
-          for (let k = j + 1; k < this.ncol; ++k) {
+          for (let k = j + 1; k < this.ncol; k++) {
             if (this.position[i][k] !== 0) {
               this.position[i][j] = this.position[i][k];
               this.position[i][k] = 0;
@@ -179,6 +221,12 @@ class Board {
       samplingBoard = directionBoard.copy()
       for (let k = 0; k < this.depth; ++k) {
         samplingBoard.add()
+
+        // if (samplingBoard.randomMove()) {
+        //   if (samplingBoard.isCleared) break
+        // } else {
+        //   break
+        // }
 
         if (samplingBoard.move(DIRECTIONS[Math.floor(Math.random() * 4)])) {
           if (samplingBoard.isCleared) break

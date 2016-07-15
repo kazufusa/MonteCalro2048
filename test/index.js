@@ -171,6 +171,48 @@ describe('board', () => {
     })
   })
 
+  describe('#isMovable', () => {
+    it('should return being movable to left', () => {
+      const board = setup()
+      assert.deepStrictEqual(board.isMovable(LEFT), true)
+    })
+
+    it('should return being movable to right', () => {
+      const board = setup()
+      assert.deepStrictEqual(board.isMovable(RIGHT), true)
+    })
+
+    it('should return being movable to up', () => {
+      const board = setup()
+      assert.deepStrictEqual(board.isMovable(UP), true)
+    })
+
+    it('should return being movable to down', () => {
+      const board = setup()
+      assert.deepStrictEqual(board.isMovable(DOWN), true)
+    })
+
+    it('should return being unmovable to left', () => {
+      const board = unmovableSetup()
+      assert.deepStrictEqual(board.isMovable(LEFT), false)
+    })
+
+    it('should return being unmovable to right', () => {
+      const board = unmovableSetup()
+      assert.deepStrictEqual(board.isMovable(RIGHT), false)
+    })
+
+    it('should return being unmovable to up', () => {
+      const board = unmovableSetup()
+      assert.deepStrictEqual(board.isMovable(UP), false)
+    })
+
+    it('should return being unmovable to down', () => {
+      const board = unmovableSetup()
+      assert.deepStrictEqual(board.isMovable(DOWN), false)
+    })
+  })
+
   describe('#evaluate', () => {
     it('returns a evaluation of the input move', () => {
       const board = new Board([[0, 0, 0, 2], [0, 0, 2, 4], [1, 4, 8, 16], [2, 3, 8, 16]])
