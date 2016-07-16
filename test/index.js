@@ -93,34 +93,6 @@ describe('board', () => {
     })
   })
 
-  describe('#reverseRow', () => {
-    it('should reverse all rows in the position with a odd row size', () => {
-      const board = new Board([[1, 2, 3], [6, 5, 4]])
-      board.reverseRow()
-      assert.deepStrictEqual(board.position, [[3, 2, 1], [4, 5, 6]])
-    })
-
-    it('should reverse all rows in the position with a even row size', () => {
-      const board = new Board([[1, 2, 3, 4], [6, 5, 4, 3]])
-      board.reverseRow()
-      assert.deepStrictEqual(board.position, [[4, 3, 2, 1], [3, 4, 5, 6]])
-    })
-  })
-
-  describe('#transposition', () => {
-    it('should take transposition the position with a odd row size', () => {
-      const board = new Board([[1, 2, 3], [6, 5, 4]])
-      board.transposition()
-      assert.deepStrictEqual(board.position, [[1, 6], [2, 5], [3, 4]])
-    })
-
-    it('should take transposition the position with a even row size', () => {
-      const board = new Board([[1, 2, 3, 4], [6, 5, 4, 3]])
-      board.transposition()
-      assert.deepStrictEqual(board.position, [[1, 6], [2, 5], [3, 4], [4, 3]])
-    })
-  })
-
   describe('#move', () => {
     it('should be enable to take a move to left', () => {
       const board = setup()
