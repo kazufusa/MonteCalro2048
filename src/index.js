@@ -32,14 +32,21 @@ class Board {
 
   updateState() {
     this.nZeroCells = 0
-    this.isCleared = false
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol; ++j) {
-        if (this.position[i][j] === this.target) this.isCleared = true
         if (this.position[i][j] === 0) ++this.nZeroCells
       }
     }
     this.isOvered = this.nZeroCells === 0
+  }
+
+  isCleared() {
+    for (let i = 0; i < this.nrow; ++i) {
+      for (let j = 0; j < this.ncol; ++j) {
+        if (this.position[i][j] === this.target) return true
+      }
+    }
+    return false
   }
 
   copy() {
@@ -331,7 +338,6 @@ class Board {
   evaluate(direction) {
     const directionBoard = this.copy()
     if (!directionBoard.move(direction)) return -1
-    if (directionBoard.isCleared) return directionBoard.nZeroCells * this.sampling
 
     let count = 0
     let samplingBoard
@@ -340,18 +346,7 @@ class Board {
       samplingBoard = directionBoard.copy()
       for (let k = 0; k < this.depth; ++k) {
         samplingBoard.add()
-
-        if (samplingBoard.randomMove()) {
-          if (samplingBoard.isCleared) break
-        } else {
-          break
-        }
-
-        // if (samplingBoard.move(DIRECTIONS[Math.floor(Math.random() * 4)])) {
-        //   if (samplingBoard.isCleared) break
-        // } else {
-        //   if (samplingBoard.isOvered) break
-        // }
+        if (!samplingBoard.randomMove()) break
       }
       count += samplingBoard.nZeroCells
     }

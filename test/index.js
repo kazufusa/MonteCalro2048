@@ -48,18 +48,6 @@ describe('board', () => {
     })
   })
 
-  describe('.isCleared', () => {
-    it('should be false with a setup not including target value', () => {
-      const board = setup({ target: 2048 })
-      assert.deepStrictEqual(board.isCleared, false)
-    })
-
-    it('should be true with a setup including target value', () => {
-      const board = setup({ target: 2 })
-      assert.deepStrictEqual(board.isCleared, true)
-    })
-  })
-
   describe('.isOvered', () => {
     it('should be false with a setup including a cell of zero', () => {
       const board = setup()
@@ -69,6 +57,18 @@ describe('board', () => {
     it('should be true with a setup not including a cell of zero', () => {
       const board = unmovableSetup()
       assert.deepStrictEqual(board.isOvered, true)
+    })
+  })
+
+  describe('#isCleared', () => {
+    it('should be false with a setup not including target value', () => {
+      const board = setup({ target: 2048 })
+      assert.deepStrictEqual(board.isCleared(), false)
+    })
+
+    it('should be true with a setup including target value', () => {
+      const board = setup({ target: 2 })
+      assert.deepStrictEqual(board.isCleared(), true)
     })
   })
 
