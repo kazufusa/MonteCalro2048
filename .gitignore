@@ -1,6 +1,3 @@
 .node-version
 node_modules/*
 tmp/*
-
-# under development
-lib/*

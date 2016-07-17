@@ -48,15 +48,15 @@ describe('board', () => {
     })
   })
 
-  describe('.isOvered', () => {
+  describe('.isOvered()', () => {
     it('should be false with a setup including a cell of zero', () => {
       const board = setup()
-      assert.deepStrictEqual(board.isOvered, false)
+      assert.deepStrictEqual(board.isOvered(), false)
     })
 
     it('should be true with a setup not including a cell of zero', () => {
       const board = unmovableSetup()
-      assert.deepStrictEqual(board.isOvered, true)
+      assert.deepStrictEqual(board.isOvered(), true)
     })
   })
 
@@ -121,25 +121,25 @@ describe('board', () => {
     it('should be disable to take a move to left', () => {
       const board = unmovableSetup()
       assert.deepStrictEqual(board.move(DOWN), false)
-      assert.deepStrictEqual(board.isOvered, true)
+      assert.deepStrictEqual(board.isOvered(), true)
     })
 
     it('should be disable to take a move to right', () => {
       const board = unmovableSetup()
       assert.deepStrictEqual(board.move(RIGHT), false)
-      assert.deepStrictEqual(board.isOvered, true)
+      assert.deepStrictEqual(board.isOvered(), true)
     })
 
     it('should be disable to take a move to up', () => {
       const board = unmovableSetup()
       assert.deepStrictEqual(board.move(UP), false)
-      assert.deepStrictEqual(board.isOvered, true)
+      assert.deepStrictEqual(board.isOvered(), true)
     })
 
     it('should be disable to take a move to down', () => {
       const board = unmovableSetup()
       assert.deepStrictEqual(board.move(DOWN), false)
-      assert.deepStrictEqual(board.isOvered, true)
+      assert.deepStrictEqual(board.isOvered(), true)
     })
   })
 
@@ -192,10 +192,10 @@ describe('board', () => {
     })
   })
 
-  describe('#predict', () => {
+  describe('#estimate', () => {
     it('returns a move and evaluations', () => {
       const board = new Board([[0, 0, 0, 2], [0, 0, 2, 4], [1, 4, 8, 16], [2, 3, 8, 16]])
-      const ret = board.predict()
+      const ret = board.estimate()
       assert.ok(DIRECTIONS.includes(ret.direction))
       assert.deepStrictEqual(ret.evaluations.length, 4)
     })

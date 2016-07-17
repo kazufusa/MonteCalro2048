@@ -1,7 +1,7 @@
 {
   "name": "montecalro2048",
   "version": "0.0.1",
-  "description": "2048 solver with montecalro",
+  "description": "2048 solver using monte calro sampling",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
@@ -22,7 +22,7 @@
     "2048"
   ],
   "author": "kazufusa",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/kazufusa/MonteCalro2048/issues"
   },

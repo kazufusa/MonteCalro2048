@@ -31,13 +31,12 @@ class Board {
   }
 
   updateState() {
-    this.nZeroCells = 0
+    this.nEmpty = 0
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol; ++j) {
-        if (this.position[i][j] === 0) ++this.nZeroCells
+        if (this.position[i][j] === 0) ++this.nEmpty
       }
     }
-    this.isOvered = this.nZeroCells === 0
   }
 
   isCleared() {
@@ -49,6 +48,12 @@ class Board {
     return false
   }
 
+  isOvered() {
+    if (this.nEmpty !== 0) return false
+    for (let i = 0; i < 4; ++i) if (this.isMovable(i)) return false
+    return true
+  }
+
   copy() {
     return new Board(
       this.position,
@@ -57,14 +62,14 @@ class Board {
   }
 
   add() {
-    if (this.nZeroCells === 0) return
-    let n = Math.floor(Math.random() * (this.nZeroCells))
+    if (this.nEmpty === 0) return
+    let n = Math.floor(Math.random() * (this.nEmpty))
 
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol; ++j) {
         if (this.position[i][j] === 0 && n === 0) {
           this.position[i][j] = Math.random() < 0.9 ? 2 : 4;
-          --this.nZeroCells
+          --this.nEmpty
           return;
         }
         if (this.position[i][j] === 0) --n;
@@ -355,13 +360,13 @@ class Board {
         samplingBoard.add()
         if (!samplingBoard.randomMove()) break
       }
-      count += samplingBoard.nZeroCells
+      count += samplingBoard.nEmpty
     }
 
     return count
   }
 
-  predict() {
+  estimate() {
     const evaluations = DIRECTIONS.map((v) => this.evaluate(v))
     return {
       direction: evaluations.indexOf(Math.max(...evaluations)),
