@@ -57,7 +57,6 @@ class Board {
   }
 
   add() {
-    this.updateState()
     if (this.nZeroCells === 0) return
     let n = Math.floor(Math.random() * (this.nZeroCells))
 
@@ -65,6 +64,7 @@ class Board {
       for (let j = 0; j < this.ncol; ++j) {
         if (this.position[i][j] === 0 && n === 0) {
           this.position[i][j] = Math.random() < 0.9 ? 2 : 4;
+          --this.nZeroCells
           return;
         }
         if (this.position[i][j] === 0) --n;
@@ -196,18 +196,25 @@ class Board {
   }
 
   move(direction) {
+    let ret
     switch (direction) {
       case LEFT:
-        return this.leftMove()
+        ret = this.leftMove()
+        break
       case RIGHT:
-        return this.rightMove()
+        ret = this.rightMove()
+        break
       case UP:
-        return this.upMove()
+        ret = this.upMove()
+        break
       case DOWN:
-        return this.downMove()
+        ret = this.downMove()
+        break
       default:
         return false
     }
+    if (ret) this.updateState()
+    return ret
   }
 
   leftMove() {
