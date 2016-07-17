@@ -1,5 +1,7 @@
 # montecalro2048: 2048 Solver using Monte Calro Simulation
 
+[![Build Status](https://travis-ci.org/kazufusa/MonteCalro2048.svg)](https://travis-ci.org/kazufusa/MonteCalro2048)
+
 montecalro2048 is a simple Monte Calro solver for
 2048 game [2048 game](https://github.com/gabrielecirulli/2048).
 

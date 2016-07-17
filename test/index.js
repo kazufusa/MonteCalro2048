@@ -77,7 +77,7 @@ describe('board', () => {
       const board = setup()
       assert.deepStrictEqual(board.position[0][0], 0)
       board.add()
-      assert.ok([2, 4].includes(board.position[0][0]))
+      assert.ok([2, 4].indexOf(board.position[0][0]) >= 0)
     })
 
     it('should change two cells\' values from 0 to 2 or 4', () => {
@@ -88,8 +88,8 @@ describe('board', () => {
       board.add()
       board.add()
 
-      assert.ok([2, 4].includes(board.position[1][1]))
-      assert.ok([2, 4].includes(board.position[2][1]))
+      assert.ok([2, 4].indexOf(board.position[1][1]) >= 0)
+      assert.ok([2, 4].indexOf(board.position[2][1]) >= 0)
     })
   })
 
@@ -196,7 +196,7 @@ describe('board', () => {
     it('returns a move and evaluations', () => {
       const board = new Board([[0, 0, 0, 2], [0, 0, 2, 4], [1, 4, 8, 16], [2, 3, 8, 16]])
       const ret = board.estimate()
-      assert.ok(DIRECTIONS.includes(ret.direction))
+      assert.ok(DIRECTIONS.indexOf(ret.direction) >= 0)
       assert.deepStrictEqual(ret.evaluations.length, 4)
     })
   })
