@@ -2,31 +2,36 @@ import * as assert from 'assert'
 import { Board, LEFT, RIGHT, UP, DOWN, DIRECTIONS } from '../lib'
 
 describe('board', () => {
-  // 0 2 2
-  // 2 2 4
-  // 4 4 4
-  const initial = [[0, 2, 2], [2, 2, 4], [4, 4, 4]]
+  const initial = [
+    [1, 0, 1],
+    [0, 1, 2],
+    [1, 2, 1],
+  ]
   const setup = (options) => new Board(initial, options)
 
-  // 4 0 0
-  // 4 4 0
-  // 8 4 0
-  const left = [[4, 0, 0], [4, 4, 0], [8, 4, 0]]
+  const left = [
+    [2, 0, 0],
+    [1, 2, 0],
+    [1, 2, 1],
+  ]
 
-  // 0 0 4
-  // 0 4 4
-  // 0 4 8
-  const right = [[0, 0, 4], [0, 4, 4], [0, 4, 8]]
+  const right = [
+    [0, 0, 2],
+    [0, 1, 2],
+    [1, 2, 1],
+  ]
 
-  // 2 4 2
-  // 4 4 8
-  // 0 0 0
-  const up = [[2, 4, 2], [4, 4, 8], [0, 0, 0]]
+  const up = [
+    [2, 1, 1],
+    [0, 2, 2],
+    [0, 0, 1],
+  ]
 
-  // 0 0 0
-  // 2 4 2
-  // 4 4 8
-  const down = [[0, 0, 0], [2, 4, 2], [4, 4, 8]]
+  const down = [
+    [0, 0, 1],
+    [0, 1, 2],
+    [2, 2, 1],
+  ]
 
   const anotherInitial = [[1, 1, 1], [1, 0, 1], [1, 0, 1]]
   const anotherSetup = (options) => new Board(anotherInitial, options)
@@ -67,17 +72,17 @@ describe('board', () => {
     })
 
     it('should be true with a setup including target value', () => {
-      const board = setup({ target: 2 })
+      const board = setup({ target: 1 })
       assert.deepStrictEqual(board.isCleared(), true)
     })
   })
 
   describe('#add', () => {
     it('should change a cell\'s value from 0 to 2 or 4', () => {
-      const board = setup()
-      assert.deepStrictEqual(board.position[0][0], 0)
+      const board = new Board([[1, 1], [2, 0]])
+      assert.deepStrictEqual(board.position[1][1], 0)
       board.add()
-      assert.ok([2, 4].indexOf(board.position[0][0]) >= 0)
+      assert.ok([2, 4].indexOf(board.position[1][1]) >= 0)
     })
 
     it('should change two cells\' values from 0 to 2 or 4', () => {
@@ -119,27 +124,37 @@ describe('board', () => {
     })
 
     it('should be disable to take a move to left', () => {
-      const board = unmovableSetup()
-      assert.deepStrictEqual(board.move(DOWN), false)
-      assert.deepStrictEqual(board.isOvered(), true)
+      const board = new Board([
+        [0, 0, 0],
+        [2, 1, 0],
+      ])
+      assert.deepStrictEqual(board.move(LEFT), false)
     })
 
     it('should be disable to take a move to right', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [0, 0, 0],
+        [0, 1, 2],
+      ])
       assert.deepStrictEqual(board.move(RIGHT), false)
-      assert.deepStrictEqual(board.isOvered(), true)
     })
 
     it('should be disable to take a move to up', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [32, 16, 256, 2],
+        [2, 512, 8, 8],
+        [0, 8, 32, 2],
+        [0, 2, 1024, 0],
+      ]);
       assert.deepStrictEqual(board.move(UP), false)
-      assert.deepStrictEqual(board.isOvered(), true)
     })
 
     it('should be disable to take a move to down', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [0, 2, 1],
+        [0, 1, 2],
+      ])
       assert.deepStrictEqual(board.move(DOWN), false)
-      assert.deepStrictEqual(board.isOvered(), true)
     })
   })
 
@@ -199,29 +214,33 @@ describe('board', () => {
     it('should return being unmovable to left', () => {
       const board = new Board([
         [2, 1, 0],
-        [2, 1, 0],
+        [2, 1, 2],
+        [0, 0, 0],
       ])
       assert.deepStrictEqual(board.isMovable(LEFT), false)
     })
 
     it('should return being unmovable to right', () => {
       const board = new Board([
+        [1, 2, 1],
+        [0, 0, 0],
         [0, 2, 1],
-        [0, 0, 1],
       ])
       assert.deepStrictEqual(board.isMovable(RIGHT), false)
     })
 
     it('should return being unmovable to up', () => {
       const board = new Board([
-        [0, 2, 2],
-        [0, 0, 1],
+        [0, 1, 1],
+        [0, 2, 0],
+        [0, 1, 0],
       ])
       assert.deepStrictEqual(board.isMovable(UP), false)
     })
 
     it('should return being unmovable to down', () => {
       const board = new Board([
+        [0, 1, 0],
         [0, 2, 0],
         [0, 1, 1],
       ])
@@ -231,8 +250,21 @@ describe('board', () => {
 
   describe('#evaluate', () => {
     it('returns a evaluation of the input move', () => {
-      const board = new Board([[0, 0, 0, 2], [0, 0, 2, 4], [1, 4, 8, 16], [2, 3, 8, 16]])
-      assert.ok(parseInt(board.evaluate(0), 10))
+      let board = new Board([
+        [32, 16, 256, 2],
+        [2, 512, 8, 8],
+        [0, 8, 32, 2],
+        [0, 2, 1024, 0],
+      ]);
+      assert.deepStrictEqual(board.evaluate(UP), -1)
+
+      board = new Board([
+        [0, 0, 0, 2],
+        [0, 0, 2, 4],
+        [1, 4, 8, 16],
+        [2, 3, 8, 16],
+      ])
+      assert.ok(parseInt(board.evaluate(UP), 10))
     })
   })
 

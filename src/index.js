@@ -68,11 +68,11 @@ class Board {
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol; ++j) {
         if (this.position[i][j] === 0 && n === 0) {
-          this.position[i][j] = Math.random() < 0.9 ? 2 : 4;
+          this.position[i][j] = Math.random() < 0.9 ? 2 : 4
           --this.nEmpty
-          return;
+          return
         }
-        if (this.position[i][j] === 0) --n;
+        if (this.position[i][j] === 0) --n
       }
     }
   }
@@ -80,8 +80,12 @@ class Board {
   isLeftMovable() {
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol - 1; ++j) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][j + 1]) {
-          return true
+        for (let k = j + 1; k < this.ncol; ++k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[i][k] && this.position[i][k] !== 0) break
+          if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][k]) {
+            return true
+          }
         }
       }
     }
@@ -104,8 +108,12 @@ class Board {
   isRightMovable() {
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = this.ncol - 1; j > 0; --j) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][j - 1]) {
-          return true
+        for (let k = j - 1; k >= 0; --k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[i][k] && this.position[i][k] !== 0) break
+          if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][k]) {
+            return true
+          }
         }
       }
     }
@@ -121,15 +129,20 @@ class Board {
         }
       }
     }
-    return false;
+
+    return false
   }
 
 
   isUpMovable() {
     for (let j = 0; j < this.ncol; ++j) {
       for (let i = 0; i < this.nrow - 1; ++i) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i + 1][j]) {
-          return true
+        for (let k = i + 1; k < this.nrow; ++k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[k][j] && this.position[k][j] !== 0) break
+          if (this.position[i][j] === this.position[k][j]) {
+            return true
+          }
         }
       }
     }
@@ -146,14 +159,18 @@ class Board {
       }
     }
 
-    return false;
+    return false
   }
 
   isDownMovable() {
     for (let j = 0; j < this.ncol; ++j) {
       for (let i = this.nrow - 1; i > 0; --i) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i - 1][j]) {
-          return true
+        for (let k = i - 1; k >= 0; --k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[k][j] && this.position[k][j] !== 0) break
+          if (this.position[i][j] > 0 && this.position[i][j] === this.position[k][j]) {
+            return true
+          }
         }
       }
     }
@@ -170,7 +187,7 @@ class Board {
       }
     }
 
-    return false;
+    return false
   }
 
   isMovable(direction) {
@@ -225,14 +242,19 @@ class Board {
   }
 
   leftMove() {
-    let ret = false;
+    let ret = false
 
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol - 1; ++j) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][j + 1]) {
-          this.position[i][j] = this.position[i][j] * 2;
-          this.position[i][j + 1] = 0;
-          ret = true;
+        for (let k = j + 1; k < this.ncol; ++k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[i][k] && this.position[i][k] !== 0) break
+          if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][k]) {
+            this.position[i][j] = this.position[i][j] * 2
+            this.position[i][k] = 0
+            ret = true
+            break
+          }
         }
       }
     }
@@ -242,28 +264,33 @@ class Board {
         if (this.position[i][j] === 0) {
           for (let k = j + 1; k < this.ncol; ++k) {
             if (this.position[i][k] !== 0) {
-              this.position[i][j] = this.position[i][k];
-              this.position[i][k] = 0;
-              ret = true;
-              break;
+              this.position[i][j] = this.position[i][k]
+              this.position[i][k] = 0
+              ret = true
+              break
             }
           }
         }
       }
     }
 
-    return ret;
+    return ret
   }
 
   rightMove() {
-    let ret = false;
+    let ret = false
 
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = this.ncol - 1; j > 0; --j) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][j - 1]) {
-          this.position[i][j] = this.position[i][j] * 2;
-          this.position[i][j - 1] = 0;
-          ret = true;
+        for (let k = j - 1; k >= 0; --k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[i][k] && this.position[i][k] !== 0) break
+          if (this.position[i][j] > 0 && this.position[i][j] === this.position[i][k]) {
+            this.position[i][j] = this.position[i][j] * 2
+            this.position[i][k] = 0
+            ret = true
+            break
+          }
         }
       }
     }
@@ -273,29 +300,34 @@ class Board {
         if (this.position[i][j] === 0) {
           for (let k = j - 1; k >= 0; --k) {
             if (this.position[i][k] !== 0) {
-              this.position[i][j] = this.position[i][k];
-              this.position[i][k] = 0;
-              ret = true;
-              break;
+              this.position[i][j] = this.position[i][k]
+              this.position[i][k] = 0
+              ret = true
+              break
             }
           }
         }
       }
     }
 
-    return ret;
+    return ret
   }
 
 
   upMove() {
-    let ret = false;
+    let ret = false
 
     for (let j = 0; j < this.ncol; ++j) {
       for (let i = 0; i < this.nrow - 1; ++i) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i + 1][j]) {
-          this.position[i][j] = this.position[i][j] * 2;
-          this.position[i + 1][j] = 0;
-          ret = true;
+        for (let k = i + 1; k < this.nrow; ++k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[k][j] && this.position[k][j] !== 0) break
+          if (this.position[i][j] === this.position[k][j]) {
+            this.position[i][j] = this.position[i][j] * 2
+            this.position[k][j] = 0
+            ret = true
+            break
+          }
         }
       }
     }
@@ -303,30 +335,34 @@ class Board {
     for (let j = 0; j < this.ncol; ++j) {
       for (let i = 0; i < this.nrow - 1; ++i) {
         if (this.position[i][j] === 0) {
-          for (let k = j + 1; k < this.nrow; ++k) {
+          for (let k = i + 1; k < this.nrow; ++k) {
             if (this.position[k][j] !== 0) {
-              this.position[i][j] = this.position[k][j];
-              this.position[k][j] = 0;
-              ret = true;
-              break;
+              this.position[i][j] = this.position[k][j]
+              this.position[k][j] = 0
+              ret = true
+              break
             }
           }
         }
       }
     }
 
-    return ret;
+    return ret
   }
 
   downMove() {
-    let ret = false;
+    let ret = false
 
     for (let j = 0; j < this.ncol; ++j) {
       for (let i = this.nrow - 1; i > 0; --i) {
-        if (this.position[i][j] > 0 && this.position[i][j] === this.position[i - 1][j]) {
-          this.position[i][j] = this.position[i][j] * 2;
-          this.position[i - 1][j] = 0;
-          ret = true;
+        for (let k = i - 1; k >= 0; --k) {
+          if (this.position[i][j] === 0) break
+          if (this.position[i][j] !== this.position[k][j] && this.position[k][j] !== 0) break
+          if (this.position[i][j] > 0 && this.position[i][j] === this.position[k][j]) {
+            this.position[i][j] = this.position[i][j] * 2
+            this.position[k][j] = 0
+            ret = true
+          }
         }
       }
     }
@@ -336,17 +372,16 @@ class Board {
         if (this.position[i][j] === 0) {
           for (let k = i - 1; k >= 0; --k) {
             if (this.position[k][j] !== 0) {
-              this.position[i][j] = this.position[k][j];
-              this.position[k][j] = 0;
-              ret = true;
-              break;
+              this.position[i][j] = this.position[k][j]
+              this.position[k][j] = 0
+              ret = true
+              break
             }
           }
         }
       }
     }
-
-    return ret;
+    return ret
   }
 
   evaluate(direction) {
