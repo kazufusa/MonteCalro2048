@@ -145,42 +145,86 @@ describe('board', () => {
 
   describe('#isMovable', () => {
     it('should return being movable to left', () => {
-      const board = setup()
+      let board = new Board([
+        [0, 0, 0],
+        [1, 1, 0],
+      ])
+      assert.deepStrictEqual(board.isMovable(LEFT), true)
+      board = new Board([
+        [0, 0, 0],
+        [0, 1, 0],
+      ])
       assert.deepStrictEqual(board.isMovable(LEFT), true)
     })
 
     it('should return being movable to right', () => {
-      const board = setup()
+      let board = new Board([
+        [0, 1, 1],
+        [0, 0, 0],
+      ])
+      assert.deepStrictEqual(board.isMovable(RIGHT), true)
+      board = new Board([
+        [2, 0, 0],
+        [2, 1, 0],
+      ])
       assert.deepStrictEqual(board.isMovable(RIGHT), true)
     })
 
     it('should return being movable to up', () => {
-      const board = setup()
+      let board = new Board([
+        [2, 0, 0],
+        [2, 1, 0],
+      ])
+      assert.deepStrictEqual(board.isMovable(UP), true)
+      board = new Board([
+        [0, 0, 0],
+        [0, 1, 0],
+      ])
       assert.deepStrictEqual(board.isMovable(UP), true)
     })
 
     it('should return being movable to down', () => {
-      const board = setup()
+      let board = new Board([
+        [0, 1, 0],
+        [0, 1, 0],
+      ])
+      assert.deepStrictEqual(board.isMovable(DOWN), true)
+      board = new Board([
+        [0, 1, 0],
+        [0, 0, 0],
+      ])
       assert.deepStrictEqual(board.isMovable(DOWN), true)
     })
 
     it('should return being unmovable to left', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [2, 1, 0],
+        [2, 1, 0],
+      ])
       assert.deepStrictEqual(board.isMovable(LEFT), false)
     })
 
     it('should return being unmovable to right', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [0, 2, 1],
+        [0, 0, 1],
+      ])
       assert.deepStrictEqual(board.isMovable(RIGHT), false)
     })
 
     it('should return being unmovable to up', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [0, 2, 2],
+        [0, 0, 1],
+      ])
       assert.deepStrictEqual(board.isMovable(UP), false)
     })
 
     it('should return being unmovable to down', () => {
-      const board = unmovableSetup()
+      const board = new Board([
+        [0, 2, 0],
+        [0, 1, 1],
+      ])
       assert.deepStrictEqual(board.isMovable(DOWN), false)
     })
   })

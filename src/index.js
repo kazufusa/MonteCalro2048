@@ -89,8 +89,10 @@ class Board {
     for (let i = 0; i < this.nrow; ++i) {
       for (let j = 0; j < this.ncol - 1; ++j) {
         if (this.position[i][j] === 0) {
-          for (let k = j + 1; k < this.ncol; --k) {
-            if (this.position[i][k] !== 0) return true
+          for (let k = j + 1; k < this.ncol; ++k) {
+            if (this.position[i][k] !== 0) {
+              return true
+            }
           }
         }
       }
@@ -135,7 +137,7 @@ class Board {
     for (let j = 0; j < this.ncol; ++j) {
       for (let i = 0; i < this.nrow - 1; ++i) {
         if (this.position[i][j] === 0) {
-          for (let k = j + 1; k < this.nrow; ++k) {
+          for (let k = i + 1; k < this.nrow; ++k) {
             if (this.position[k][j] !== 0) {
               return true
             }
