@@ -1,8 +1,8 @@
-const LEFT = 0
-const UP = 1
-const RIGHT = 2
-const DOWN = 3
-const DIRECTIONS = [LEFT, UP, RIGHT, DOWN]
+const UP = 0
+const RIGHT = 1
+const DOWN = 2
+const LEFT = 3
+const DIRECTIONS = [UP, RIGHT, DOWN, LEFT]
 
 const copy = (array2d) => {
   const nrow = array2d.length

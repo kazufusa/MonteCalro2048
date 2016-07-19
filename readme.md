@@ -13,7 +13,7 @@ var board = new Board([
   [ 32, 512,   8,  4],
   [  8,   2,  64, 16]
 ]);
-var bestmove = board.estimate().direction // 0:LEFT, 1:RIGHT, 2:UP, 3:DOWN
+var bestmove = board.estimate().direction // 0:UP, 1:RIGHT, 2:DOWN, 3:LEFT
 ```
 
 ## Class: Board
@@ -37,7 +37,7 @@ The `Board` class has the following methods:
 Returns a `estimation`.
 
 * `estimation` Object
-  * `direction` Integer - Estimated move(0: left, 1: right, 2: up, 3: down).
+  * `direction` Integer - Estimated move(0: up, 1: right, 2: down, 3: left).
   * `evaluation` Integer - The evaluations of all moves.
 
 #### `board.add()`
@@ -46,7 +46,7 @@ A new tile will randomly appear in an empty(=0) spot on the board with a value o
 
 #### `board.move(direction)`
 
-* `direction` Integer - Move the board to the input direction (0: left, 1: right, 2: up, 3: down).
+* `direction` Integer - Move the board to the input direction (0: up, 1: right, 2: down, 3: left).
 
 #### `board.print()`
 
