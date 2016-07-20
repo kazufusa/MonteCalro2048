@@ -1,6 +1,6 @@
 {
   "name": "montecalro2048",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "2048 solver using monte calro sampling",
   "main": "lib/index.js",
   "directories": {

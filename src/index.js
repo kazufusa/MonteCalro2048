@@ -362,6 +362,7 @@ class Board {
             this.position[i][j] = this.position[i][j] * 2
             this.position[k][j] = 0
             ret = true
+            break
           }
         }
       }
